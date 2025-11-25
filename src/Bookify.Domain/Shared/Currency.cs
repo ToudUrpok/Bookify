@@ -16,9 +16,9 @@ public sealed record Currency
                throw new ApplicationException("The currency code is invalid");
     }
 
-    public static readonly IReadOnlyCollection<Currency> All = new[]
-    {
+    public static readonly IReadOnlyCollection<Currency> All =
+    [
         Usd,
         Eur
-    };
+    ];
 }

@@ -2,7 +2,7 @@
 
 public abstract class Entity
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = [];
 
     protected Entity(Guid id)
     {
@@ -17,7 +17,7 @@ public abstract class Entity
 
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
-        return _domainEvents.ToList();
+        return [.. _domainEvents];
     }
 
     public void ClearDomainEvents()
