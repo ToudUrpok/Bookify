@@ -13,7 +13,7 @@ namespace Bookify.Api.Controllers.Users;
 [ApiController]
 [ApiVersion(ApiVersions.V1)]
 [Route("api/v{version:apiVersion}/users")]
-internal class UsersController : ControllerBase
+public class UsersController : ControllerBase
 {
     private readonly ISender _sender;
 

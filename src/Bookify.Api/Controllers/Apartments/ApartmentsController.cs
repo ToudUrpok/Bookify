@@ -11,7 +11,7 @@ namespace Bookify.Api.Controllers.Apartments;
 [ApiController]
 [ApiVersion(ApiVersions.V1)]
 [Route("api/v{version:apiVersion}/apartments")]
-internal class ApartmentsController : ControllerBase
+public class ApartmentsController : ControllerBase
 {
     private readonly ISender _sender;
 
