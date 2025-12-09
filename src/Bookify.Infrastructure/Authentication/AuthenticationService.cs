@@ -23,15 +23,15 @@ internal sealed class AuthenticationService : IAuthenticationService
     {
         var userRepresentationModel = UserRepresentationModel.FromUser(user);
 
-        userRepresentationModel.Credentials = new CredentialRepresentationModel[]
-        {
+        userRepresentationModel.Credentials =
+        [
             new()
             {
                 Value = password,
                 Temporary = false,
                 Type = PasswordCredentialType
             }
-        };
+        ];
 
         HttpResponseMessage response = await _httpClient.PostAsJsonAsync(
             "users",
@@ -52,8 +52,8 @@ internal sealed class AuthenticationService : IAuthenticationService
             usersSegmentName,
             StringComparison.InvariantCultureIgnoreCase);
 
-        string userIdentityId = locationHeader.Substring(
-            userSegmentValueIndex + usersSegmentName.Length);
+        string userIdentityId = locationHeader[
+            (userSegmentValueIndex + usersSegmentName.Length)..];
 
         return userIdentityId;
     }

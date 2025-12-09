@@ -56,7 +56,7 @@ internal sealed class UserRepresentationModel
             Enabled = true,
             EmailVerified = true,
             CreatedTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            Attributes = new Dictionary<string, List<string>>(),
-            RequiredActions = Array.Empty<string>()
+            Attributes = [],
+            RequiredActions = []
         };
 }
