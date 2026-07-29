@@ -3,6 +3,7 @@ using Bookify.ArchitectureTests.Infrastructure;
 using FluentAssertions;
 using FluentValidation;
 using NetArchTest.Rules;
+using TestResult = NetArchTest.Rules.TestResult;
 
 namespace Bookify.ArchitectureTests.Application;
 

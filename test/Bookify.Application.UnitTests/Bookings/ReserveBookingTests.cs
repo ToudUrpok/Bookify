@@ -191,6 +191,6 @@ public class ReserveBookingTests
         Result<Guid> result = await _handler.Handle(Command, default);
 
         // Assert
-        _bookingRepositoryMock.Received(1).Add(Arg.Is<Booking>(b => b.Id == result.Value));
+        _bookingRepositoryMock.Received(1).Add(Arg.Is<Booking>(b => b != null && b.Id == result.Value));
     }
 }

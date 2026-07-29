@@ -3,6 +3,7 @@ using Bookify.Domain.Abstractions;
 using FluentAssertions;
 using NetArchTest.Rules;
 using System.Reflection;
+using TestResult = NetArchTest.Rules.TestResult;
 
 namespace Bookify.ArchitectureTests.Domain;
 

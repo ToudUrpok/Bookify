@@ -1,6 +1,7 @@
 ﻿using Bookify.Application.Apartments.SearchApartments;
 using Bookify.Application.IntegrationTests.Infrastructure;
 using Bookify.Domain.Abstractions;
+using Bookify.Domain.Apartments;
 using FluentAssertions;
 
 namespace Bookify.Application.IntegrationTests.Apartments;
@@ -30,6 +31,12 @@ public class SearchApartmentsTests : BaseIntegrationTest
     public async Task SearchApartments_ShouldReturnApartments_WhenDateRangeIsValid()
     {
         // Arrange
+        Apartment apartment = ApartmentData.Create();
+
+        DbContext.Set<Apartment>().Add(apartment);
+
+        await DbContext.SaveChangesAsync();
+
         var query = new SearchApartmentsQuery(new DateOnly(2024, 1, 1), new DateOnly(2024, 1, 10));
 
         // Act

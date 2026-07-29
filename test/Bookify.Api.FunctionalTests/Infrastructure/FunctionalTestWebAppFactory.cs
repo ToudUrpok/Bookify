@@ -19,18 +19,16 @@ namespace Bookify.Api.FunctionalTests.Infrastructure;
 
 public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
-        .WithImage("postgres:latest")
+    private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:latest")
         .WithDatabase("bookify")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
 
-    private readonly RedisContainer _redisContainer = new RedisBuilder()
-        .WithImage("redis:latest")
+    private readonly RedisContainer _redisContainer = new RedisBuilder("redis:latest")
         .Build();
 
-    private readonly KeycloakContainer _keycloakContainer = new KeycloakBuilder()
+    private readonly KeycloakContainer _keycloakContainer = new KeycloakBuilder("quay.io/keycloak/keycloak:latest")
         .WithResourceMapping(
             new FileInfo(".files/bookify-realm-export.json"),
             new FileInfo("/opt/keycloak/data/import/realm.json"))
@@ -41,7 +39,7 @@ public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyn
     {
         builder.ConfigureTestServices(services =>
         {
-            services.RemoveAll(typeof(DbContextOptions<ApplicationDbContext>));
+            services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
 
             string connectionString = $"{_dbContainer.GetConnectionString()};Pooling=False";
 
@@ -50,7 +48,7 @@ public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyn
                     .UseNpgsql(connectionString)
                     .UseSnakeCaseNamingConvention());
 
-            services.RemoveAll(typeof(ISqlConnectionFactory));
+            services.RemoveAll<ISqlConnectionFactory>();
 
             services.AddSingleton<ISqlConnectionFactory>(_ =>
                 new SqlConnectionFactory(connectionString));
@@ -74,7 +72,7 @@ public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyn
         });
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
@@ -83,11 +81,13 @@ public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyn
         await InitializeTestUserAsync();
     }
 
-    public new async Task DisposeAsync()
+    public new async ValueTask DisposeAsync()
     {
         await _dbContainer.StopAsync();
         await _redisContainer.StopAsync();
         await _keycloakContainer.StopAsync();
+
+        GC.SuppressFinalize(this);
     }
 
     private async Task InitializeTestUserAsync()
@@ -103,4 +103,5 @@ public class FunctionalTestWebAppFactory : WebApplicationFactory<Program>, IAsyn
             // Do nothing.
         }
     }
+
 }

@@ -1,6 +1,7 @@
 ﻿using Bookify.ArchitectureTests.Infrastructure;
 using FluentAssertions;
 using NetArchTest.Rules;
+using TestResult = NetArchTest.Rules.TestResult;
 
 namespace Bookify.ArchitectureTests.Layers;
 
