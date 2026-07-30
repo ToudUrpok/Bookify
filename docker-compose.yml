@@ -22,13 +22,36 @@ services:
     ports:
       - 5432:5432
 
+  bookify-idp-db:
+    image: postgres:latest
+    container_name: Bookify.Identity.Db
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/identity-database:/var/lib/postgresql
+    ports:
+      - 5434:5432
+
   bookify-idp:
     image: quay.io/keycloak/keycloak:latest
     container_name: Bookify.Identity
     command: start-dev --import-realm
+    depends_on:
+      - bookify-idp-db
+    restart: always
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - KC_HEALTH_ENABLED=true
+      - KC_DB=postgres
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=postgres
+      - KC_DB_SCHEMA=keycloak
+      - KC_DB_URL_HOST=bookify-idp-db
+      - KC_DB_PORT=5432
+      - KC_DB_URL_DATABASE=keycloak
     volumes:
       - ./.containers/identity:/opt/keycloak/data
       - ./.files/bookify-realm-export.json:/opt/keycloak/data/import/realm.json
